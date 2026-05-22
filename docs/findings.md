@@ -1,149 +1,161 @@
 # QBR Findings — Credit Card Portfolio
 
-Findings from running the queries in [`/sql`](../sql/) against the loaded
-transaction set (500K transactions, 5,000 users, ~8,000 cards, Jan 2023 –
-Dec 2025). Framing: what a junior analyst on a financial institution
-partnership team would surface to the account team ahead of a QBR.
+Findings from running the queries in [`/sql`](../sql/) against the
+**real IBM Credit Card Transactions dataset** (Ealtman 2019 on Kaggle):
+**24.4M transactions, 2,000 cardholders, 6,146 cards, 1991 – Feb 2020**.
+Framing: what an analyst on a financial institution partnership team
+would surface to the account team ahead of a QBR.
 
 The full per-query CSV outputs sit in
 [`/data/processed/query_outputs/`](../data/processed/query_outputs/).
 
 ---
 
-## 1. Volume more than doubled YoY in 2024 before plateauing in 2025
+## 1. Portfolio finished 2019 at a $72M annualized run-rate, with Jan 2020 up +16% YoY
 
-Approved spend grew from **$3.7M** (FY2023) to **$9.6M** (FY2024) —
-a **161% YoY** lift driven mostly by ramp, not basket inflation.
-2025 H1 then plateaued at roughly **$830K/month** before softening into
-H2 (Q1.1, Q1.4).
+December 2019 closed at **$6.08M** in approved monthly volume; January
+2020 jumped to **$7.08M** — a **+16.4% YoY** lift and the largest single
+MoM gain in the trailing 12 months (Q1.1, Q1.4). February eased back to
+$6.76M (still **+22.4% YoY**).
 
-**Why it matters.** The partnership team should set 2026 targets off the
-2025 H1 run-rate (~$10M annualized), not the 2024 growth curve, which
-was acquisition-driven and isn't repeatable.
+**Why it matters.** Two strong months back-to-back to start 2020 should
+be the headline of the QBR — the portfolio is accelerating into the new
+year, not coasting on 2019 momentum.
 
-**Suggested next step.** Pull a top-down 2026 plan that holds active
-cards flat and only models spend-per-active-card growth. Anything above
-that is upside.
-
----
-
-## 2. Active-card rate has been falling since the late-2024 peak
-
-Active-card rate (cards with ≥1 approved tx / eligible cards) peaked at
-**95.4%** in Aug 2024 and has drifted down to **~89%** through 2025 H1
-(Q1.2). Volume held up over the same window only because the eligible
-card base grew.
-
-**Why it matters.** That's classic "activation softening" — new cards
-are being issued, but a growing share aren't being used. Every inactive
-card is a write-off on acquisition cost.
-
-**Suggested next step.** Cut active rate by issue-date cohort to see
-whether recent vintages are activating worse than older ones, and align
-with marketing on whether the welcome-bonus flow has changed.
+**Suggested next step.** Cut the January growth by acquisition cohort
+to isolate new-card activations from existing-cohort lift. If new
+cohorts drove most of the +16%, the team should lean into the
+acquisition channel that produced them.
 
 ---
 
-## 3. Grocery is the #1 category at 19% of spend but Airlines + Hotels
-   are 23% combined
+## 2. Active-card rate is near-saturated at ~100%
 
-Top 3 by approved volume: **Grocery Stores $4.0M (19.2%)**,
-**Airlines $2.8M (13.5%)**, **Hotels $2.0M (9.3%)** (Q2.1). Average
-ticket: grocery ~$65, airlines ~$380, hotels ~$240 (Q2.3) — different
-businesses entirely.
+Active card rate (cards with ≥1 approved tx / eligible cards) has run
+between **99.5% and 100%** for the last twelve months (Q1.2). This is
+a near-universally-engaged book.
 
-**Why it matters.** Grocery is the everyday-spend anchor; travel is the
-high-margin, low-frequency premium category. Reward structure and
-fraud-rule tuning should be designed for both, not optimized for one.
+**Why it matters.** Inverse of finding #1 in the synthetic version —
+this portfolio has effectively no activation problem. Future growth
+has to come from per-card spend, not from waking up dormant plastic.
 
-**Suggested next step.** Quantify interchange revenue by category (we
-can layer in MCC-level rates) so the team can rank categories by
-contribution, not just volume.
+**Suggested next step.** Shift KPI focus from "active card rate" (which
+is at ceiling) to "high-engagement cards" — defined e.g. as cards with
+≥10 transactions and ≥$500 spend per month — so the team has a metric
+that can still move.
 
 ---
 
-## 4. Spend is concentrated: top 10% of users drive 29% of volume
+## 3. Money Transfer is the surprise #1 category at 10.4% of portfolio spend
 
-The top decile of spenders accounts for **$6.2M / 29.3%** of approved
-volume, with an average annual spend of **$12,366**. The bottom 50% of
-users contribute just **19.3%** of volume (Q3.2).
+The top three categories by approved volume are:
+**Money Transfer $98.6M (10.4%)**, **Grocery Stores $73.5M (7.8%)**,
+**Wholesale Clubs $68.8M (7.3%)** (Q2.1). Money Transfer and Utilities
+combined account for **15.8%** of spend — a much larger share than a
+typical issuer would assume.
 
-**Why it matters.** Less concentrated than the canonical 80/20, but
-still skewed enough that losing the top decile would put a measurable
-dent in interchange. These are the relationship-management priority
-list.
+**Why it matters.** Money Transfer (MCC 4829) usually carries lower
+interchange than retail spend, so a high volume share there
+under-monetizes vs. its volume rank. Pricing and rewards strategy
+should be modeled on category mix, not just total volume.
+
+**Suggested next step.** Build a weighted-interchange estimate per
+category (volume × category-typical interchange rate) and re-rank the
+top 10 by revenue contribution. The list will look very different.
+
+---
+
+## 4. Spend is highly concentrated: top 10% of users drive 31.7% of volume
+
+The top decile of spenders accounts for **$329M / 31.7%** of approved
+lifetime volume, with an average spend of **$1.65M per user**. The
+bottom 50% of users contribute just **15.4%** of volume (Q3.2). The
+distribution is more skewed than 80/20.
+
+**Why it matters.** Losing the top decile would cost roughly a third
+of the portfolio. These 200 cardholders are the relationship-management
+priority list and the single biggest source of churn risk.
 
 **Suggested next step.** Build a churn-risk score on the top decile
-specifically (drop in monthly transactions, category mix shift away
-from anchor categories) and route flagged users to retention outreach.
+specifically (90-day drop in monthly transactions, category mix shift
+away from anchor categories) and route flagged users to retention
+outreach within 30 days of a flag.
 
 ---
 
-## 5. Multi-card users spend 5x what single-card users spend
+## 5. Multi-card users spend ~3x what single-card users spend
 
-Single-card users average **$2,638** in approved spend; users with 5+
-cards average **$13,251** (Q3.3). Multi-card users are 5.9% of the
-base but contribute 23.2% of volume.
+Single-card users average **$265K** in lifetime approved spend; users
+with 5+ cards average **$822K** (Q3.3). The 3–4 card cohort
+($578K avg) is the single largest segment by both count (825 users)
+and total contribution ($477M / 46% of total volume).
 
 **Why it matters.** Cross-sell directly correlates with portfolio
-value. Even moving a single-card user to two cards roughly doubles
-their spend ($2,638 → $5,209).
+value. Even moving a single-card user to two cards ~1.4x'es lifetime
+spend ($265K → $383K).
 
 **Suggested next step.** Identify the top quartile of single-card
-spenders with ≥12 months of tenure and high category diversity — that
+spenders with ≥5 years of tenure and high category diversity — that
 cohort has the highest probability of accepting a second-card offer.
 
 ---
 
-## 6. Top-5-state concentration is 47% — within tolerance, but watch FL
+## 6. Top-5-state concentration is 38.6% — well within tolerance
 
-CA leads at **16.6%** of volume, followed by TX (9.1%), FL (7.2%),
-NY (6.3%), OH (4.3%). Cumulative top-5 share: **47.9%** (Q4.3).
+CA leads at **12.2%** of volume, followed by TX (8.1%), NY (7.5%),
+FL (6.7%), PA (4.0%). Cumulative top-5 share: **38.6%** (Q4.3).
+Cumulative top-10 share: **55.4%**.
 
-**Why it matters.** Anything above ~50% is a concentration risk; we're
-just under. Florida in particular has high seasonality and disaster
-exposure — worth modeling separately.
+**Why it matters.** Comfortably below the ~50% top-5 concentration
+threshold that would trigger a concentration-risk flag. The portfolio
+is well-diversified geographically.
 
-**Suggested next step.** Stress-test the portfolio against a "Florida
-hurricane month" scenario (assume FL volume drops 40% for one month)
-to estimate the dollar exposure.
-
----
-
-## 7. Fraud rate concentrated in high-ticket categories, not in volume drivers
-
-Fraud rate by category: Airlines **1.50%**, Electronics **1.51%**,
-Hotels **1.45%**, Department Stores **1.42%** — vs. Grocery at
-**0.37%** (Q4.2). High-ticket categories are roughly **4x** the fraud
-rate of everyday spend.
-
-**Why it matters.** Fraud losses are dominated by ticket size, not by
-attempt count. A single fraudulent airline transaction is the same
-loss as ~6 fraudulent grocery transactions.
-
-**Suggested next step.** Tighten step-up auth rules on Airlines/Hotels
-above the **$500** mark (which is roughly the p95 ticket for those
-categories) and measure the false-positive rate before rolling broader.
+**Suggested next step.** Maintain. If targeted-acquisition spend is
+ever redirected to a specific state (e.g. a regional bank co-brand),
+re-check this distribution annually so the concentration doesn't drift
+above 50%.
 
 ---
 
-## 8. Per-active-user engagement is steady — growth has been driven by
-   base expansion, not by users transacting more
+## 7. Online-channel fraud is concentrated in a handful of categories
 
-Average transactions per active user per month has hovered between
-**3.0 and 3.4** for all of 2024 and 2025 H1 (Q3.4). Active-user count
-grew ~25% YoY over that same window.
+Looking at fraud volume by category × channel (Q4.2), the highest-loss
+combinations are all **online**: Department Stores online ($347K
+fraud volume, 1.6% fraud rate), Cruises online ($329K, 50% rate),
+Wholesale Clubs online, Money Transfer online. In contrast, in-person
+chip transactions show fraud rates **below 0.1%** across categories.
 
-**Why it matters.** Reinforces finding #1 — growth has been
-acquisition-led, not engagement-led. To grow the portfolio without
-more acquisition spend, we need to move per-user engagement.
+**Why it matters.** This is a classic card-not-present (CNP) fraud
+profile — physical-presence categories are safe; online checkout is
+where the loss happens. Investing in 3DS / step-up auth on CNP traffic
+in these categories would attack the bulk of fraud loss.
 
-**Suggested next step.** A/B test a category-bonus offer (e.g.,
-groceries) on a holdout of low-frequency active users and measure
-incremental transactions over the following 90 days.
+**Suggested next step.** Pilot 3DS on online Department Stores and
+Electronics transactions above $50 ticket size; measure (a) decline
+in fraud rate, (b) false-positive lift in legitimate-decline rate, and
+(c) abandonment rate at checkout, over a 60-day window.
 
 ---
 
-*Numbers above were generated by running each query in [`/sql`](../sql/)
-against the local DuckDB warehouse. The same SQL ports to BigQuery with
-the dialect notes in [`methodology.md`](methodology.md).*
+## 8. Per-active-user engagement is exceptional: ~90 transactions/month
+
+Average transactions per active user per month has held between **85
+and 95** for the last twelve months (Q3.4); median is in the low 80s.
+These are heavy daily users.
+
+**Why it matters.** The engagement bar here is materially higher than
+a typical issuer book (industry median is closer to 15–25 tx/month).
+Reinforces that this isn't a portfolio where engagement is the lever
+— growth has to come from cardholder acquisition or basket size.
+
+**Suggested next step.** Avoid spending on engagement-stimulation
+campaigns (already saturated). Reallocate that budget to top-decile
+retention (finding #4) and to acquisition channels that produced the
+January 2020 lift (finding #1).
+
+---
+
+*Numbers above were generated by running each query in
+[`/sql`](../sql/) against the real IBM dataset loaded into the local
+DuckDB warehouse. The same SQL ports to BigQuery with the dialect
+notes in [`methodology.md`](methodology.md).*

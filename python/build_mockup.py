@@ -37,8 +37,8 @@ def main() -> None:
     mix = pd.read_csv(Q / "02_merchant_category__Q2.2.csv", parse_dates=["month"])
     cohort = pd.read_csv(Q / "03_customer_behavior__Q3.1.csv", parse_dates=["cohort_month"])
 
-    # KPIs from latest "stable" month — use 2025-06 (before tail-off)
-    target = pd.Timestamp("2025-06-01")
+    # KPIs from the most recent month in the data.
+    target = vol["month"].max()
     kpi_vol_row = vol.loc[vol["month"] == target].iloc[0]
     kpi_act_row = act.loc[act["month"] == target].iloc[0]
     kpi_mom_row = mom.loc[mom["month"] == target].iloc[0]
@@ -53,18 +53,22 @@ def main() -> None:
     # ---- Title strip ----
     title_ax = fig.add_subplot(gs[0, :])
     title_ax.axis("off")
-    title_ax.text(0.005, 0.65, "Issuer Portfolio QBR  ·  Snapshot 2025-06",
+    title_ax.text(0.005, 0.65,
+                  f"Issuer Portfolio QBR  ·  Snapshot {target.strftime('%Y-%m')}",
                   fontsize=22, fontweight="bold", color="#1f2a44")
+    yr_min = vol["month"].min().year
+    yr_max = vol["month"].max().year
     title_ax.text(0.005, 0.18,
-                  "500K transactions  ·  5,000 users  ·  ~8,000 cards  ·  Jan 2023 – Dec 2025",
+                  f"IBM Credit Card Transactions  ·  24.4M tx  ·  2,000 users  ·  6,146 cards  ·  {yr_min} – {yr_max}",
                   fontsize=11, color="#5a6478")
 
     # ---- KPI strip ----
+    label_month = target.strftime("%b %Y")
     kpis = [
-        ("Approved Volume (Jun 2025)", fmt_usd(kpi_vol_row["approved_volume_usd"]), f"MoM {kpi_mom_row['mom_growth_pct']:+.1f}%"),
-        ("Transactions",               f"{int(kpi_vol_row['tx_count']):,}",         f"YoY {kpi_mom_row['yoy_growth_pct']:+.0f}%"),
-        ("Active Cards",               f"{int(kpi_vol_row['active_cards']):,}",     f"Active rate {kpi_act_row['active_rate_pct']:.1f}%"),
-        ("Avg Ticket",                 f"${kpi_vol_row['avg_ticket_usd']:.2f}",     "stable ±3% YoY"),
+        (f"Approved Volume ({label_month})", fmt_usd(kpi_vol_row["approved_volume_usd"]), f"MoM {kpi_mom_row['mom_growth_pct']:+.1f}%"),
+        ("Transactions",                     f"{int(kpi_vol_row['tx_count']):,}",         f"YoY {kpi_mom_row['yoy_growth_pct']:+.1f}%"),
+        ("Active Cards",                     f"{int(kpi_vol_row['active_cards']):,}",     f"Active rate {kpi_act_row['active_rate_pct']:.1f}%"),
+        ("Avg Ticket",                       f"${kpi_vol_row['avg_ticket_usd']:.2f}",     "stable ±2% YoY"),
     ]
     for i, (label, val, sub) in enumerate(kpis):
         ax = fig.add_subplot(gs[1, i])

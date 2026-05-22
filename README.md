@@ -29,13 +29,13 @@ matter most, and what risks are worth flagging. The four query themes
 
 ## Data
 
-- **Source:** IBM Synthetic Credit Card Transactions (Kaggle).
+- **Source:** [IBM Credit Card Transactions on Kaggle](https://www.kaggle.com/datasets/ealtman2019/credit-card-transactions)
+  (Ealtman 2019). The findings in this repo were generated against the
+  **real dataset**: 24.4M transactions, 2,000 cardholders, 6,146 cards,
+  Jan 1991 – Feb 2020.
 - **Fallback:** [`python/generate_data.py`](python/generate_data.py)
-  produces a **schema-identical synthetic dataset** when the Kaggle
-  download isn't available — 500K transactions, 5K users, ~8K cards,
-  36 months. The findings in this repo were generated against that
-  synthetic dataset; swapping in the real Kaggle file requires no
-  query changes.
+  produces a schema-identical synthetic dataset (500K rows) for use
+  when Kaggle isn't available — useful for CI / quick iteration.
 - **Schema:** `transactions(user_id, card_id, year, month, day, time,
   amount, use_chip, merchant_name, merchant_city, merchant_state, zip,
   mcc, errors, is_fraud)` plus `users` and `cards` tables.
@@ -70,16 +70,21 @@ Grouped to mirror a real issuer QBR deck:
 Full writeup with numbers and recommended next steps:
 **[`docs/findings.md`](docs/findings.md)**. Headlines:
 
-1. Volume more than doubled YoY in 2024 (+161%) before plateauing in 2025.
-2. Active-card rate is drifting down (95% -> 89%) — growth is becoming
-   acquisition-led rather than activation-led.
-3. Grocery is #1 at 19% of spend; Airlines + Hotels combined are 23%.
-4. Top 10% of users drive 29% of volume; bottom 50% drive 19%.
-5. Multi-card users spend ~5x what single-card users spend.
-6. Top-5-state concentration is 48% — within tolerance but watch FL.
-7. Fraud rate in high-ticket categories is ~4x everyday spend.
-8. Per-active-user engagement is flat — growth is base-expansion, not
-   deeper usage.
+1. Portfolio closed 2019 at a **$72M annualized run-rate** and Jan 2020
+   was up **+16% YoY** — strong momentum into the new year.
+2. **Active-card rate is at ceiling (~100%)** — future growth has to
+   come from per-card spend, not from activating dormant plastic.
+3. **Money Transfer is the surprise #1 category** at 10.4% of spend —
+   under-monetized vs. its volume rank.
+4. **Top 10% of users drive 31.7% of volume**; bottom 50% drive 15.4%.
+5. **Multi-card users spend ~3x single-card users** ($822K vs $265K
+   lifetime).
+6. Top-5-state concentration is 38.6% — well-diversified.
+7. **Fraud is concentrated in online-channel** card-not-present
+   transactions; in-person chip fraud is <0.1%.
+8. Per-active-user engagement is exceptional (~90 tx/month) and
+   already saturated — invest in acquisition and retention, not
+   engagement campaigns.
 
 ## Dashboard
 
