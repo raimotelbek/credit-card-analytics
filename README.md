@@ -140,8 +140,3 @@ See [`docs/methodology.md`](docs/methodology.md) for KPI definitions,
 sampling approach, and the BigQuery / DuckDB dialect notes used so the
 same SQL file runs against both engines.
 
-## About
-
-Built by [Raimo Telbek](mailto:raimotelbek0721@gmail.com) as a portfolio
-project targeting FinTech / payments analyst roles (Mastercard Sales,
-issuer/bank partnership teams).
