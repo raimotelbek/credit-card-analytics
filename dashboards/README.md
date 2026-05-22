@@ -1,21 +1,18 @@
 # Dashboard
 
-## Live link
+## Visual
 
-*(Looker Studio public URL goes here after publish.)*
+![Dashboard](mockup.png)
+
+Rendered by [`../python/build_mockup.py`](../python/build_mockup.py)
+directly from the BigQuery query outputs in
+`../data/processed/query_outputs/`, so every number, bar, and time-series
+point is real (not placeholder).
 
 ## Build instructions
 
 See [`BUILD_GUIDE.md`](BUILD_GUIDE.md) — tile-by-tile configuration
 mapping each chart to the SQL file in [`../sql/`](../sql/) that feeds it.
-
-## Mockup
-
-![Dashboard mockup](mockup.png)
-
-The mockup is rendered by [`../python/build_mockup.py`](../python/build_mockup.py)
-from the actual query outputs in `../data/processed/query_outputs/`,
-so the figures shown are real values from the loaded dataset.
 
 ## Tile -> Query map
 

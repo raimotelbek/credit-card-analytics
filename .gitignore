@@ -27,3 +27,4 @@ gcp-key*.json
 
 # Jupyter
 .ipynb_checkpoints/
+data/_bq_export/

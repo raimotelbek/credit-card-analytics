@@ -88,11 +88,18 @@ Full writeup with numbers and recommended next steps:
 
 ## Dashboard
 
-- **Live link:** *(Looker Studio public URL goes here after publish)*
-- **Build guide:** [`dashboards/BUILD_GUIDE.md`](dashboards/BUILD_GUIDE.md)
-  — tile-by-tile config with the SQL file feeding each chart.
-- **Mockup:** [`dashboards/mockup.png`](dashboards/mockup.png) — rendered
-  from real query outputs.
+The dashboard is delivered as a rendered PNG built directly from the
+real BigQuery query outputs, plus a Looker Studio build guide.
+
+- **Visual:** [`dashboards/mockup.png`](dashboards/mockup.png) — the
+  image at the top of this README. Numbers and trends are real, pulled
+  from `data/processed/query_outputs/`.
+- **Looker Studio build guide:** [`dashboards/BUILD_GUIDE.md`](dashboards/BUILD_GUIDE.md)
+  — tile-by-tile configuration mapping each chart to the SQL query that
+  feeds it. The dataset is already loaded into BigQuery
+  (`credit-card-analytics-497117.credit_card_analytics`), so a Looker
+  Studio reviewer can point a report at it and rebuild the dashboard
+  in ~30 minutes.
 
 ## How to Reproduce
 
