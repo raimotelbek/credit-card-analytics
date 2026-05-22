@@ -1,27 +1,29 @@
-# Data
-data/raw/
-data/processed/
-*.csv
-*.parquet
-*.zip
-!data/README.md
-!dashboards/screenshots/*.png
-
 # Python
 __pycache__/
 *.pyc
 .venv/
 venv/
-.ipynb_checkpoints/
+*.egg-info/
 
-# Credentials — NEVER commit BigQuery service-account keys
-*.json
-!**/schema*.json
-.env
+# Data — raw CSVs and the local DuckDB warehouse are large + reproducible
+data/raw/
+data/warehouse.duckdb
+data/*.duckdb
 
-# IDE / OS
+# Per-query CSV outputs are reproducible from sql/ + a loaded warehouse
+data/processed/query_outputs/
+
+# OS / IDE
+.DS_Store
 .vscode/
 .idea/
-Thumbs.db
-desktop.ini
-.DS_Store
+*.swp
+
+# Credentials — never commit
+.kaggle/
+gcp-key*.json
+.env
+.env.*
+
+# Jupyter
+.ipynb_checkpoints/
