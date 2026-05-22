@@ -1,0 +1,27 @@
+# Data
+data/raw/
+data/processed/
+*.csv
+*.parquet
+*.zip
+!data/README.md
+!dashboards/screenshots/*.png
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+.ipynb_checkpoints/
+
+# Credentials — NEVER commit BigQuery service-account keys
+*.json
+!**/schema*.json
+.env
+
+# IDE / OS
+.vscode/
+.idea/
+Thumbs.db
+desktop.ini
+.DS_Store

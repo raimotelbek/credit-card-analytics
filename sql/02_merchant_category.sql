@@ -1,0 +1,2 @@
+-- Theme B — Merchant & Category Insights
+-- Queries filled in during Step 3.

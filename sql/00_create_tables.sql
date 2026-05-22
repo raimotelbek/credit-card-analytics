@@ -1,0 +1,2 @@
+-- Table DDL for the BigQuery dataset.
+-- Filled in during Step 2 once the Kaggle schema is confirmed.
