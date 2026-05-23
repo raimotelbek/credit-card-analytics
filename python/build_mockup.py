@@ -146,9 +146,13 @@ def main() -> None:
     # ---- Row 4 left: cohort heatmap ----
     ax = fig.add_subplot(gs[4, :2])
     ax.set_facecolor("white")
-    co = cohort[cohort["cohort_month"] >= "2023-01-01"]
+    # Use cohorts from the trailing analysis window. The IBM dataset's
+    # signup dates (derived from earliest card open) span 1991-2019, so
+    # filter to cohorts large enough to be visually informative.
+    co = cohort[(cohort["cohort_month"] >= "2014-01-01") &
+                (cohort["cohort_month"] <= "2019-06-01")]
     piv = co.pivot(index="cohort_month", columns="months_since_signup", values="retention_pct")
-    piv = piv.iloc[:18, :13]
+    piv = piv.tail(18).iloc[:, :13]
     im = ax.imshow(piv.values, aspect="auto", cmap="Blues", vmin=0, vmax=100)
     ax.set_xticks(range(piv.shape[1]))
     ax.set_xticklabels(piv.columns)

@@ -35,9 +35,9 @@ Active card rate (cards with ≥1 approved tx / eligible cards) has run
 between **99.5% and 100%** for the last twelve months (Q1.2). This is
 a near-universally-engaged book.
 
-**Why it matters.** Inverse of finding #1 in the synthetic version —
-this portfolio has effectively no activation problem. Future growth
-has to come from per-card spend, not from waking up dormant plastic.
+**Why it matters.** This portfolio has effectively no activation
+problem. Future growth has to come from per-card spend, not from
+waking up dormant plastic.
 
 **Suggested next step.** Shift KPI focus from "active card rate" (which
 is at ceiling) to "high-engagement cards" — defined e.g. as cards with

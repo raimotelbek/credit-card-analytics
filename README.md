@@ -33,6 +33,11 @@ matter most, and what risks are worth flagging. The four query themes
   (Ealtman 2019). The findings in this repo were generated against the
   **real dataset**: 24.4M transactions, 2,000 cardholders, 6,146 cards,
   Jan 1991 – Feb 2020.
+- **Analysis window.** The IBM dataset accumulates synthetic-user
+  activity over 29 years rather than reflecting a stable production
+  portfolio. KPI-driven findings focus on the **trailing 24 months
+  (Mar 2018 – Feb 2020)** as the relevant window for QBR-style
+  reporting; longer-term charts are shown for context only.
 - **Fallback:** [`python/generate_data.py`](python/generate_data.py)
   produces a schema-identical synthetic dataset (500K rows) for use
   when Kaggle isn't available — useful for CI / quick iteration.
@@ -136,7 +141,10 @@ python python/duckdb_to_bigquery.py
 ```
 
 The dataset for this project is live at
-`credit-card-analytics-497117.credit_card_analytics` (BigQuery).
+`credit-card-analytics-497117.credit_card_analytics` (BigQuery):
+24,386,900 rows in `transactions` (monthly-partitioned by `tx_date`,
+clustered on `mcc, merchant_state`), 2,000 in `users`, 6,146 in
+`cards`, 64 in `mcc_lookup`. Verified via `bq query`.
 
 ## What I'd Do Next
 
