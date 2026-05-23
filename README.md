@@ -123,15 +123,20 @@ python python/run_queries.py
 python python/build_mockup.py
 ```
 
-Loading to BigQuery instead of DuckDB:
+Loading to BigQuery (after running the local pipeline above):
 
 ```bash
-export GCP_PROJECT=your-gcp-project
-export BQ_DATASET=credit_card_analytics
-# create the dataset + tables once
-bq query --use_legacy_sql=false < sql/00_create_tables.sql
-python python/load_to_bigquery.py
+# 1. create the BigQuery dataset (one-time)
+bq mk --location=US --dataset your-project:credit_card_analytics
+
+# 2. export DuckDB tables to Parquet and load to BigQuery
+#    (partitioned monthly by tx_date, clustered on mcc + merchant_state)
+export GCP_PROJECT=your-project
+python python/duckdb_to_bigquery.py
 ```
+
+The dataset for this project is live at
+`credit-card-analytics-497117.credit_card_analytics` (BigQuery).
 
 ## What I'd Do Next
 

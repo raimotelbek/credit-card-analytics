@@ -11,7 +11,7 @@ Mockup: [`mockup.png`](mockup.png).
 ## 0. Data source
 
 Point Looker Studio at the BigQuery dataset `credit_card_analytics`
-loaded via [`python/load_to_bigquery.py`](../python/load_to_bigquery.py).
+loaded via [`python/duckdb_to_bigquery.py`](../python/duckdb_to_bigquery.py).
 Create five **custom queries** as the data sources — one per dashboard
 section — using the SQL from `/sql`. Custom queries (vs. raw tables)
 push aggregation to BigQuery and keep the dashboard fast.
